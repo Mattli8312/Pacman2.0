@@ -15,7 +15,7 @@ class MazeGraph
 
 
         static std::vector<std::vector<char>> graph;
-        static std::vector<std::vector<short>> visited;
+        static std::vector<std::vector<short>> pellets;
         static unsigned x_o;
         static unsigned cell_size;
         static unsigned width, height;

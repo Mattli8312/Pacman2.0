@@ -10,7 +10,7 @@ Pinky::Pinky(int x, int y, int width, int height, std::string ghostname)
     name = ghostname;
 
     scatter_i = 1; scatter_j = 1;
-    scatter_time = 3000;
+    scatter_time = 600;
     dir = 3, vel = 2;
 }
 
@@ -34,7 +34,8 @@ void Pinky::TargetSystem(std::vector<int> points)
             HandleDirection(scatter_j * MazeGraph::cell_size + MazeGraph::x_o, scatter_i * MazeGraph::cell_size);
             if(!scatter_time--){
                 state_ = CHASE;
-                scatter_time = 300;
+                std::cout<<"Chasing"<<std::endl;
+                scatter_time = 600;
             }
             break;
         default:

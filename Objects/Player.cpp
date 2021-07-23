@@ -129,6 +129,12 @@ bool Player::HasCollided(short direction)
 
     if(!((x_pos - MazeGraph::x_o) % MazeGraph::cell_size) && !(y_pos % MazeGraph::cell_size)){
         //continue
+        switch(MazeGraph::pellets[i_][j_]){
+            case 1: score += 100; break;
+            case 2: score += 1000; break;
+            default: break;
+        }
+        MazeGraph::pellets[i_][j_] = 0;
     }
     /**
     Collision Detection

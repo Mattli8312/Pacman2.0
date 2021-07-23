@@ -142,7 +142,7 @@
 	<SDL_image.h>
 	"MazeGraph.h"
 
-1626814799 c:\users\mattl\cpp_projects\pacman2.0\src\mazegraph.h
+1627076204 c:\users\mattl\cpp_projects\pacman2.0\src\mazegraph.h
 	<vector>
 
 1627074087 source:c:\users\mattl\cpp_projects\pacman2.0\objects\blinky.cpp
@@ -186,7 +186,7 @@
 1627068598 c:\users\mattl\cpp_projects\pacman2.0\objects\pinky.h
 	"Ghost.h"
 
-1627073321 source:c:\users\mattl\cpp_projects\pacman2.0\objects\player.cpp
+1627078101 source:c:\users\mattl\cpp_projects\pacman2.0\objects\player.cpp
 	"Player.h"
 	"MazeGraph.h"
 	"Player.h"
@@ -200,7 +200,7 @@
 1626811052 source:c:\users\mattl\cpp_projects\pacman2.0\src\gameobject.cpp
 	"GameObject.h"
 
-1627073972 source:c:\users\mattl\cpp_projects\pacman2.0\src\mazegraph.cpp
+1627077991 source:c:\users\mattl\cpp_projects\pacman2.0\src\mazegraph.cpp
 	"MazeGraph.h"
 	<fstream>
 	<iostream>
@@ -209,4 +209,13 @@
 
 1626810372 source:c:\users\mattl\cpp_projects\pacman2.0\src\texturemanager.cpp
 	"TextureManager.h"
+
+1627074284 source:c:\users\mattl\cpp_projects\pacman2.0\src\game.cpp
+	"Game.h"
+	"TextureManager.h"
+	"Player.h"
+	"Blinky.h"
+	"Pinky.h"
+	"Inky.h"
+	"Clyde.h"
 
