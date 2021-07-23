@@ -1,0 +1,94 @@
+#include "Ghost.h"
+#include <queue>
+#include <algorithm>
+
+Ghost::Ghost(){
+    /**Do Nothing**/
+    xpos = 0;
+    ypos = 0;
+    w = 0;
+    h = 0;
+    dir = 0;
+    ghost = nullptr;
+}
+
+Ghost::~Ghost()
+{
+    //dtor
+    if(ghost) delete ghost;
+    for(unsigned i = 0; i < GhostSheet.size(); i++){
+        for(unsigned j = 0; j < GhostSheet[0].size(); j++){
+            if(GhostSheet[i][j]) delete GhostSheet[i][j];
+            GhostSheet[i][j] = nullptr;
+        }
+    }
+    ghost = nullptr;
+}
+
+void Ghost::HandleDisplay()
+{
+    if(ghost != nullptr){
+        ghost->Update(xpos, ypos);
+        ghost->Render();
+    }
+}
+
+void Ghost::HandleDirection(int x, int y)
+{
+    int pac_i = y / MazeGraph::cell_size;
+    int pac_j = (x - MazeGraph::x_o) / MazeGraph::cell_size;
+    int j = (xpos - MazeGraph::x_o) / MazeGraph::cell_size;
+    int i = ypos / MazeGraph::cell_size;
+    int prev_dir = dir;
+    if(!((xpos - MazeGraph::x_o)%MazeGraph::cell_size) && !(ypos%MazeGraph::cell_size)){
+        if(MazeGraph::graph[i][j] == '+'){
+            int dist_;
+            int min_dist = -1;
+            if(i - 1 > -1 && MazeGraph::graph[i-1][j] != '.' && prev_dir != 2){ //Checking direction up;
+                dist_ = (pac_i - (i - 1)) * (pac_i - (i - 1)) + (pac_j - j) * (pac_j - j);
+                std::cout<<dist_<<"4"<<std::endl;
+                if(min_dist == -1 || dist_ < min_dist){
+                    min_dist = dist_;
+                    dir = 4;
+                }
+            }
+            if(j - 1 > -1 && MazeGraph::graph[i][j-1] != '.' && prev_dir != 1){ //Checking direction left;
+                dist_ = (pac_i - i) * (pac_i - i) + (pac_j - (j - 1)) * (pac_j - (j - 1));
+                if(min_dist == -1 || dist_ < min_dist){
+                    min_dist = dist_;
+                    dir = 3;
+                }
+            }
+            if(i + 1 < (int)MazeGraph::graph.size() && MazeGraph::graph[i+1][j] != '.' && prev_dir != 4){ //Check direction down
+                dist_ = (pac_i - (i + 1)) * (pac_i - (i + 1)) + (pac_j - j) * (pac_j - j);
+                if(min_dist == -1 || dist_ < min_dist){
+                    min_dist = dist_;
+                    dir = 2;
+                }
+            }
+            if(j + 1 < (int)MazeGraph::graph.size() && MazeGraph::graph[i][j+1] != '.' && prev_dir != 3){ //Check direction right
+                dist_ = (pac_i - i) * (pac_i - i) + (pac_j - (j + 1)) * (pac_j - (j + 1));
+                if(min_dist == -1 || dist_ < min_dist){
+                    min_dist = dist_;
+                    dir = 1;
+                }
+            }
+        }
+    }
+}
+
+
+void Ghost::HandleMovement()
+{
+    switch(dir){
+        case 1:
+            xpos ++; break;
+        case 2:
+            ypos ++; break;
+        case 3:
+            xpos --; break;
+        default:
+            ypos --; break;
+    }
+}
+

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="TestRun" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/TestRun" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="src/Core" />
+					<Add directory="src" />
+					<Add directory="Objects" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/TestRun" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="src/Core" />
+					<Add directory="src" />
+					<Add directory="Objects" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="Objects/Blinky.cpp" />
+		<Unit filename="Objects/Blinky.h" />
+		<Unit filename="Objects/Clyde.cpp" />
+		<Unit filename="Objects/Clyde.h" />
+		<Unit filename="Objects/Ghost.cpp" />
+		<Unit filename="Objects/Ghost.h" />
+		<Unit filename="Objects/Inky.cpp" />
+		<Unit filename="Objects/Inky.h" />
+		<Unit filename="Objects/Pinky.cpp" />
+		<Unit filename="Objects/Pinky.h" />
+		<Unit filename="Objects/Player.cpp" />
+		<Unit filename="Objects/Player.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="src/Game.cpp" />
+		<Unit filename="src/Game.h" />
+		<Unit filename="src/GameObject.cpp" />
+		<Unit filename="src/GameObject.h" />
+		<Unit filename="src/Maze.txt" />
+		<Unit filename="src/MazeGraph.cpp" />
+		<Unit filename="src/MazeGraph.h" />
+		<Unit filename="src/TextureManager.cpp" />
+		<Unit filename="src/TextureManager.h" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
