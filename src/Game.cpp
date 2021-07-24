@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "TextureManager.h"
 #include "Player.h"
 #include "Blinky.h"
 #include "Pinky.h"
@@ -11,7 +10,6 @@ Blinky * blinky;
 Pinky * pinky;
 Inky * inky;
 Clyde * clyde;
-
 
 SDL_Renderer* Game::renderer = nullptr;
 
@@ -55,11 +53,11 @@ void Game::Init()
     maze = new MazeGraph;
     maze->ParseGraphFromFile();
     maze->RenderMaze();
-    player = new Player(MazeGraph::x_o + MazeGraph::cell_size * 12, MazeGraph::cell_size * 23, MazeGraph::cell_size, MazeGraph::cell_size);
-    blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 24, 24, "Blinky0");
-    pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 24, 24, "Pinky0");
-    inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 24, 24, "Inky0");
-    clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 24, 24, "Clyde0");
+    player = new Player(MazeGraph::x_o + MazeGraph::cell_size * 12, MazeGraph::cell_size * 23, MazeGraph::cell_size * 3 / 2, MazeGraph::cell_size * 3 / 2);
+    blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Blinky0");
+    pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Pinky0");
+    inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 11, 32, 32, "Inky0");
+    clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 15, MazeGraph::cell_size * 11, 32, 32, "Clyde0");
     blinky->InitializeGhost();
     pinky->InitializeGhost();
     inky->InitializeGhost();
@@ -73,7 +71,6 @@ void Game::Update()
 {
     player->HandleEventListener();
     player->HandleMovement();
-
     blinky->HandleMovement();
     pinky->HandleMovement();
     inky->HandleMovement();
@@ -87,14 +84,14 @@ void Game::Update()
 void Game::Render()
 {
     SDL_RenderClear(renderer);
-
+    /**Clear Previous frame**/
     maze->RenderMaze();
     player->HandleDisplay();
     blinky->HandleDisplay();
     pinky->HandleDisplay();
     inky->HandleDisplay();
     clyde->HandleDisplay();
-
+    /**Update frame**/
     SDL_RenderPresent(renderer);
 }
 void Game::Clear()

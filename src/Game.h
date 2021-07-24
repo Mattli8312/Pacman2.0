@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 
 #include "MazeGraph.h"
+#include "TextureManager.h"
 
 class Game
 {
@@ -27,7 +28,6 @@ class Game
         bool running;
         SDL_Window * window;
         MazeGraph * maze;
-
 };
 
 #endif // GAME_H

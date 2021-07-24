@@ -45,7 +45,7 @@ Player::Player(int x, int y, int w, int h)
 void Player::HandleDisplay()
 {
     //Render Player
-    player->Update(x_pos, y_pos);
+    player->Update(x_pos - MazeGraph::cell_size/4, y_pos - MazeGraph::cell_size/4);
     player->Render();
 }
 
@@ -63,7 +63,7 @@ void Player::HandleMovement()
                 For these parts, we handle to teleportation of Pacman between the two portals
                 **/
                 if(!(x_pos - MazeGraph::x_o))
-                    x_pos = MazeGraph::x_o + width * (MazeGraph::graph[0].size()-1);
+                    x_pos = MazeGraph::x_o + MazeGraph::cell_size * (MazeGraph::graph[0].size()-1);
                 else
                     x_pos -= vel;
                 break;

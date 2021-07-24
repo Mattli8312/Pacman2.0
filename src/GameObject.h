@@ -3,7 +3,6 @@
 
 #include <iostream>
 
-#include "Game.h"
 #include "TextureManager.h"
 class GameObject
 {

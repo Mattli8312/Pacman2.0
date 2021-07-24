@@ -88,7 +88,7 @@ void MazeGraph::RenderMaze()
                 if(graph[i][j] == '*')
                     SDL_SetRenderDrawColor(Game::renderer, 255, 192, 203, 255);
                 unsigned delx = x_o + j * cell_size, dely = i * cell_size;
-                desrect = {(int)(delx), (int)(dely), (int)(cell_size), (int)(cell_size)};
+                desrect = {(int)(delx + cell_size / 4), (int)(dely + cell_size/4), (int)(cell_size/2), (int)(cell_size/2)};
                 SDL_RenderFillRect(Game::renderer, &desrect);
                 /**Then render the food**/
                 bool is_food = true;

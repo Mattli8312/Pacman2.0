@@ -11,7 +11,7 @@ class Ghost
         Ghost();
         Ghost(int x, int y, int w, int h, std::string name);
         ~Ghost();
-        enum State{SCATTER, CHASE, FRIGHT, EATEN};
+        enum State{INIT, SCATTER, CHASE, FRIGHT, EATEN};
 
         void InitializeGhost();
         void HandleDisplay();

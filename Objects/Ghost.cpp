@@ -42,7 +42,7 @@ void Ghost::InitializeGhost()
 void Ghost::HandleDisplay()
 {
     if(ghost != nullptr){
-        ghost->Update(xpos, ypos);
+        ghost->Update(xpos - MazeGraph::cell_size/4, ypos - MazeGraph::cell_size/4);
         ghost->Render();
     }
 }
@@ -105,7 +105,7 @@ void Ghost::HandleMovement()
             ypos += vel; break;
         case 3:
             if(!(xpos - MazeGraph::x_o)){
-                xpos = MazeGraph::x_o + w * (MazeGraph::graph[0].size()-1);
+                xpos = MazeGraph::x_o + MazeGraph::cell_size * (MazeGraph::graph[0].size()-1);
             }
             else
                 xpos -= vel;
