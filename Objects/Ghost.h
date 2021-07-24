@@ -16,6 +16,8 @@ class Ghost
         void InitializeGhost();
         void HandleDisplay();
         void HandleDirection(int x, int y, bool random = false);
+        void Scatter();
+        void Frighten();
         void HandleMovement();
 
         int GetXPos();

@@ -5,6 +5,7 @@ Ghost::Ghost(){
     xpos = ypos = 0;
     target_i = target_j = 0;
     scatter_i = scatter_j = 0;
+    scatter_time = fright_time = 0;
     w = h = dir = vel = 0;
     state_ = SCATTER;
     ghost = nullptr;
@@ -35,7 +36,11 @@ void Ghost::InitializeGhost()
         }
         GhostSheet.push_back(temp);
     }
-
+    const char* filename = "Sprites/Assets/Frightened0.png";
+    const char* filename2 = "Sprites/Assets/Frightened1.png";
+    if(!IMG_Load(filename))
+        printf("Error: %s", IMG_GetError());
+    GhostSheet.push_back({new GameObject(filename, xpos, ypos, w, h), new GameObject(filename2, xpos, ypos, w, h)});
     ghost = GhostSheet[0][0];
 }
 
@@ -101,6 +106,29 @@ void Ghost::HandleDirection(int x, int y, bool random)
     }
 }
 
+void Ghost::Scatter()
+{
+    HandleDirection(scatter_j * MazeGraph::cell_size + MazeGraph::x_o, scatter_i * MazeGraph::cell_size);
+    if(!scatter_time--){
+        state_ = CHASE;
+        ghost = GhostSheet[0][0];
+        scatter_time = 600;
+    }
+}
+
+void Ghost::Frighten()
+{
+    HandleDirection(-1, -1, true);
+    if(!fright_time--){
+        state_ = CHASE;
+        ghost = GhostSheet[0][0];
+        fright_time = 600;
+    }
+    else if(fright_time <= 100 && !(fright_time%5)){
+        ghost = ghost == GhostSheet[1][0] ? GhostSheet[1][1] :  GhostSheet[1][0];
+    }
+}
+
 
 void Ghost::HandleMovement()
 {
@@ -142,6 +170,7 @@ void Ghost::SetStateFright()
     if(state_ != FRIGHT)
         dir = (dir + 2) % 4;
     state_ = FRIGHT;
+    ghost = GhostSheet[1][0];
 }
 
 

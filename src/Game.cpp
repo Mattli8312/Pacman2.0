@@ -44,12 +44,6 @@ void Game::Init()
         renderer = SDL_CreateRenderer(window, -1, 0);
         //SDL_SetRenderDrawColor(renderer, 0,255,255,255);
     }
-    if(!IMG_Load("Sprites/Pacman1.png")){
-        printf("IMG load: %s \n", IMG_GetError());
-    }
-    if(!IMG_Load("Sprites/Pacman2.PNG")){
-        printf("bullet load: %s \n", IMG_GetError());
-    }
     maze = new MazeGraph;
     maze->ParseGraphFromFile();
     maze->RenderMaze();

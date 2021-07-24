@@ -32,20 +32,10 @@ Inky::~Inky()
 void Inky::TargetSystem(std::vector<int> points){
     switch(state_){
         case SCATTER:
-            HandleDirection(scatter_j * MazeGraph::cell_size + MazeGraph::x_o, scatter_i * MazeGraph::cell_size);
-            if(!scatter_time--){
-                state_ = CHASE;
-                std::cout<<"Chasing"<<std::endl;
-                scatter_time = 600;
-            }
+            Scatter();
             break;
         case FRIGHT:
-            HandleDirection(-1, -1, true);
-            if(!fright_time--){
-                state_ = CHASE;
-                std::cout<<"Chasing"<<std::endl;
-                fright_time = 600;
-            }
+            Frighten();
             break;
         default: //Chase
             HandleDirection(2 * points[0] - points[2], 2 * points[1] - points[3]);
