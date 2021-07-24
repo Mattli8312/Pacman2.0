@@ -23,11 +23,11 @@ Player::Player(int x, int y, int w, int h)
         std::vector<GameObject*> temp;
         for(int j = 1; j < 3; j++){
             const char * filename;
-            std::string file("Sprites/Pacman" + std::to_string(j+i*2) + ".png");
+            std::string file("Sprites/Pacman/" + std::to_string(j+i*2) + ".png");
             filename = &file[0];
             temp.push_back(new GameObject(filename, x, y, w, h));
         }
-        temp.push_back(new GameObject("Sprites/Pacman0.png", x ,y, w, h));
+        temp.push_back(new GameObject("Sprites/Pacman/0.png", x ,y, w, h));
         Pacman.push_back(temp);
     }
     score = 0;
@@ -36,9 +36,10 @@ Player::Player(int x, int y, int w, int h)
     y_pos = y;
     width = w;
     height = h;
-    a_rate = 10;
+    a_rate = 5;
     a_indx = 0;
     dir = 0;
+    energized = false;
     player = Pacman[dir][a_indx];
 }
 
@@ -107,7 +108,7 @@ void Player::HandleEventListener()
     a_rate --;
     //Check to see if we transition
     if(!a_rate){
-        a_rate = 10;
+        a_rate = 5;
         a_indx ++;
         a_indx %= 3;
         player = Pacman[dir][a_indx];
@@ -131,7 +132,7 @@ bool Player::HasCollided(short direction)
         //continue
         switch(MazeGraph::pellets[i_][j_]){
             case 1: score += 100; break;
-            case 2: score += 1000; break;
+            case 2: score += 1000; energized = true; break;
             default: break;
         }
         MazeGraph::pellets[i_][j_] = 0;
@@ -171,4 +172,14 @@ int Player::GetYPos()
 
 int Player::GetDir(){
     return dir;
+}
+
+bool Player::IsEnergized()
+{
+    return energized;
+}
+
+void Player::SetEnergized(bool value)
+{
+    energized = value;
 }

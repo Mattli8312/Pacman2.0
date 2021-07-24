@@ -54,10 +54,10 @@ void Game::Init()
     maze->ParseGraphFromFile();
     maze->RenderMaze();
     player = new Player(MazeGraph::x_o + MazeGraph::cell_size * 12, MazeGraph::cell_size * 23, MazeGraph::cell_size * 3 / 2, MazeGraph::cell_size * 3 / 2);
-    blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Blinky0");
-    pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Pinky0");
-    inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 11, 32, 32, "Inky0");
-    clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 15, MazeGraph::cell_size * 11, 32, 32, "Clyde0");
+    blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Blinky");
+    pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Pinky");
+    inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 11, 32, 32, "Inky");
+    clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 15, MazeGraph::cell_size * 11, 32, 32, "Clyde");
     blinky->InitializeGhost();
     pinky->InitializeGhost();
     inky->InitializeGhost();
@@ -69,16 +69,26 @@ void Game::Init()
 
 void Game::Update()
 {
+    if(player->IsEnergized()){
+        blinky->SetStateFright();
+        pinky->SetStateFright();
+        inky->SetStateFright();
+        clyde->SetStateFright();
+        player->SetEnergized(false);
+    }
+    else{
+        blinky->TargetSystem({player->GetXPos(), player->GetYPos()});
+        pinky->TargetSystem({player->GetXPos(), player->GetYPos(), player->GetDir()});
+        inky->TargetSystem({player->GetXPos(), player->GetYPos(), blinky->GetXPos(), blinky->GetYPos()});
+        clyde->TargetSystem({player->GetXPos(), player->GetYPos()});
+    }
     player->HandleEventListener();
     player->HandleMovement();
     blinky->HandleMovement();
     pinky->HandleMovement();
     inky->HandleMovement();
     clyde->HandleMovement();
-    blinky->TargetSystem({player->GetXPos(), player->GetYPos()});
-    pinky->TargetSystem({player->GetXPos(), player->GetYPos(), player->GetDir()});
-    inky->TargetSystem({player->GetXPos(), player->GetYPos(), blinky->GetXPos(), blinky->GetYPos()});
-    clyde->TargetSystem({player->GetXPos(), player->GetYPos()});
+
 }
 
 void Game::Render()

@@ -11,7 +11,7 @@ Blinky::Blinky(int x, int y, int width, int height, std::string ghostname)
 
     target_i = target_j = 0;
     scatter_i = 1; scatter_j = 26;
-    scatter_time = 600;
+    scatter_time = fright_time = 600;
     dir = 1, vel = 2;
 }
 
@@ -39,6 +39,14 @@ void Blinky::TargetSystem(std::vector<int> points){
                 state_ = CHASE;
                 std::cout<<"Chasing"<<std::endl;
                 scatter_time = 300;
+            }
+            break;
+        case FRIGHT:
+            HandleDirection(-1, -1, true);
+            if(!fright_time--){
+                state_ = CHASE;
+                std::cout<<"Chasing"<<std::endl;
+                fright_time = 600;
             }
             break;
         default:

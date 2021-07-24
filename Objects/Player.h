@@ -17,9 +17,12 @@ class Player
         void HandleMovement();
 
         bool HasCollided(short direction);
+        bool IsEnergized();
         int GetXPos();
         int GetYPos();
         int GetDir();
+
+        void SetEnergized(bool);
 
     private:
         std::vector<std::vector<GameObject*>> Pacman;
@@ -34,6 +37,8 @@ class Player
         int dir;
         int a_rate; //Animation rate
         int a_indx; //Animation indx
+
+        bool energized;
 };
 
 #endif // PLAYER_H

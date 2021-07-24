@@ -15,11 +15,13 @@ class Ghost
 
         void InitializeGhost();
         void HandleDisplay();
-        void HandleDirection(int x, int y);
+        void HandleDirection(int x, int y, bool random = false);
         void HandleMovement();
 
         int GetXPos();
         int GetYPos();
+
+        void SetStateFright();
 
         virtual void TargetSystem(std::vector<int> points);
 
@@ -40,7 +42,7 @@ class Ghost
         int scatter_i;
         int scatter_j;
 
-        int scatter_time;
+        int scatter_time, fright_time;
         State state_;
 };
 

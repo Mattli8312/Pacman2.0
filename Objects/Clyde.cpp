@@ -11,7 +11,7 @@ Clyde::Clyde(int x, int y, int width, int height, std::string ghostname)
     name = ghostname;
 
     scatter_i = 29; scatter_j = 26;
-    scatter_time = 600;
+    scatter_time = fright_time = 600;
     dir = 3, vel = 2;
 }
 
@@ -38,6 +38,14 @@ void Clyde::TargetSystem(std::vector<int>points)
                 state_ = CHASE;
                 std::cout<<"Chasing"<<std::endl;
                 scatter_time = 600;
+            }
+            break;
+        case FRIGHT:
+            HandleDirection(-1, -1, true);
+            if(!fright_time--){
+                state_ = CHASE;
+                std::cout<<"Chasing"<<std::endl;
+                fright_time = 600;
             }
             break;
         default:
