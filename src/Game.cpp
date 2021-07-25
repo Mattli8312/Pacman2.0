@@ -49,9 +49,9 @@ void Game::Init()
     maze->RenderMaze();
     player = new Player(MazeGraph::x_o + MazeGraph::cell_size * 12, MazeGraph::cell_size * 23, MazeGraph::cell_size * 3 / 2, MazeGraph::cell_size * 3 / 2);
     blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Blinky");
-    pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Pinky");
-    inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 11, 32, 32, "Inky");
-    clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 15, MazeGraph::cell_size * 11, 32, 32, "Clyde");
+    pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 13, 32, 32, "Pinky");
+    inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 13, 32, 32, "Inky");
+    clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 15, MazeGraph::cell_size * 13, 32, 32, "Clyde");
     blinky->InitializeGhost();
     pinky->InitializeGhost();
     inky->InitializeGhost();
@@ -63,11 +63,14 @@ void Game::Init()
 
 void Game::Update()
 {
+    if(player->HasCompleted()){
+        std::cout<<"Completed"<<std::endl;
+    }
     if(player->IsEnergized()){
-        blinky->SetStateFright();
-        pinky->SetStateFright();
-        inky->SetStateFright();
-        clyde->SetStateFright();
+        if(!blinky->IsFrightened() && !blinky->IsEatened()) blinky->SetStateFright();
+        if(!pinky->IsFrightened() && !pinky->IsEatened()) pinky->SetStateFright();
+        if(!inky->IsFrightened() && !inky->IsEatened()) inky->SetStateFright();
+        if(!clyde->IsFrightened() && !clyde->IsEatened()) clyde->SetStateFright();
         player->SetEnergized(false);
     }
     else{
@@ -117,3 +120,22 @@ bool Game::IsRunning()
     return running;
 }
 
+void Game::HandleCollision()
+{
+    std::vector<Ghost*> ghosts = {blinky, inky, pinky, clyde};
+    for(auto g: ghosts){
+        if(std::abs(player->GetXPos() - g->GetXPos()) < (int)MazeGraph::cell_size/4){
+            if(std::abs(player->GetYPos() - g->GetYPos()) < (int)MazeGraph::cell_size/4){
+                if(!g->IsFrightened() && !g->IsEatened()){
+                    //Pacman collided;
+                    std::cout<<"Collided"<<std::endl;
+                }
+                else if(g->IsFrightened()){
+                    SDL_Delay(500);
+                    g->SetStateEat();
+                    std::cout<<"Eatened"<<std::endl;
+                }
+            }
+        }
+    }
+}

@@ -7,12 +7,13 @@ Clyde::Clyde(int x, int y, int width, int height, std::string ghostname)
     ypos = y;
     w = width;
     h = height;
-    state_ = SCATTER;
+    state_ = INIT;
     name = ghostname;
 
     scatter_i = 29; scatter_j = 26;
     scatter_time = fright_time = 600;
-    dir = 3, vel = 2;
+    dir = 3, vel = GhostVel;
+    init_time = 7;
 }
 
 Clyde::~Clyde()
@@ -37,6 +38,12 @@ void Clyde::TargetSystem(std::vector<int>points)
             break;
         case FRIGHT:
             Frighten();
+            break;
+        case EATEN:
+            Eaten();
+            break;
+        case INIT:
+            Init();
             break;
         default:
             float dist = std::sqrt(std::pow(xpos - points[0], 2) + std::pow(ypos - points[1], 2));

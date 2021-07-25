@@ -7,12 +7,13 @@ Inky::Inky(int x, int y, int width, int height, std::string ghostname)
     ypos = y;
     w = width;
     h = height;
-    state_ = SCATTER;
+    state_ = INIT;
     name = ghostname;
 
     scatter_i = 29; scatter_j = 1;
     scatter_time = fright_time = 600;
-    dir = 3, vel = 2;
+    dir = 3, vel = GhostVel;
+    init_time = 5;
 }
 
 Inky::~Inky()
@@ -36,6 +37,12 @@ void Inky::TargetSystem(std::vector<int> points){
             break;
         case FRIGHT:
             Frighten();
+            break;
+        case EATEN:
+            Eaten();
+            break;
+        case INIT:
+            Init();
             break;
         default: //Chase
             HandleDirection(2 * points[0] - points[2], 2 * points[1] - points[3]);

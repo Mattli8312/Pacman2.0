@@ -39,7 +39,8 @@ Player::Player(int x, int y, int w, int h)
     a_rate = 5;
     a_indx = 0;
     dir = 0;
-    energized = false;
+    food_count = 0;
+    energized = completed = false;
     player = Pacman[dir][a_indx];
 }
 
@@ -53,6 +54,10 @@ void Player::HandleDisplay()
 void Player::HandleMovement()
 {
     int vel = 3;
+    /**Handle Completion of map**/
+    if(food_count >= MazeGraph::food_count) {
+        completed = true;
+    }
     if(!HasCollided((short)dir)){
         switch(dir){
             case 3: y_pos -= vel;
@@ -131,8 +136,8 @@ bool Player::HasCollided(short direction)
     if(!((x_pos - MazeGraph::x_o) % MazeGraph::cell_size) && !(y_pos % MazeGraph::cell_size)){
         //continue
         switch(MazeGraph::pellets[i_][j_]){
-            case 1: score += 100; break;
-            case 2: score += 1000; energized = true; break;
+            case 1: score += 100; food_count++; break;
+            case 2: score += 1000; food_count++; energized = true; break;
             default: break;
         }
         MazeGraph::pellets[i_][j_] = 0;
@@ -177,6 +182,10 @@ int Player::GetDir(){
 bool Player::IsEnergized()
 {
     return energized;
+}
+
+bool Player::HasCompleted(){
+    return completed;
 }
 
 void Player::SetEnergized(bool value)

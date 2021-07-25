@@ -19,6 +19,8 @@ class MazeGraph
         static unsigned x_o;
         static unsigned cell_size;
         static unsigned width, height;
+        static int food_count;
+
     private:
 };
 

@@ -6,12 +6,13 @@ Pinky::Pinky(int x, int y, int width, int height, std::string ghostname)
     ypos = y;
     w = width;
     h = height;
-    state_ = SCATTER;
+    state_ = INIT;
     name = ghostname;
 
     scatter_i = 1; scatter_j = 1;
     scatter_time = fright_time = 600;
-    dir = 3, vel = 2;
+    dir = 3, vel = GhostVel;
+    init_time = 3;
 }
 
 Pinky::~Pinky()
@@ -35,6 +36,12 @@ void Pinky::TargetSystem(std::vector<int> points)
             break;
         case FRIGHT:
             Frighten();
+            break;
+        case EATEN:
+            Eaten();
+            break;
+        case INIT:
+            Init();
             break;
         default: // Chase
             switch(points[2]){

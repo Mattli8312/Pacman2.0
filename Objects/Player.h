@@ -17,6 +17,7 @@ class Player
         void HandleMovement();
 
         bool HasCollided(short direction);
+        bool HasCompleted();
         bool IsEnergized();
         int GetXPos();
         int GetYPos();
@@ -37,8 +38,10 @@ class Player
         int dir;
         int a_rate; //Animation rate
         int a_indx; //Animation indx
+        int food_count;
 
         bool energized;
+        bool completed;
 };
 
 #endif // PLAYER_H

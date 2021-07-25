@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include <vector>
 
+#define GhostVel 2
+
 class Ghost
 {
     public:
@@ -16,14 +18,21 @@ class Ghost
         void InitializeGhost();
         void HandleDisplay();
         void HandleDirection(int x, int y, bool random = false);
+        void HandleMovement();
+
+        void Init();
         void Scatter();
         void Frighten();
-        void HandleMovement();
+        void Eaten();
 
         int GetXPos();
         int GetYPos();
+        bool IsFrightened();
+        bool IsEatened();
+        bool IsChase();
 
         void SetStateFright();
+        void SetStateEat();
 
         virtual void TargetSystem(std::vector<int> points);
 
@@ -44,7 +53,7 @@ class Ghost
         int scatter_i;
         int scatter_j;
 
-        int scatter_time, fright_time;
+        int scatter_time, fright_time, init_time;
         State state_;
 };
 

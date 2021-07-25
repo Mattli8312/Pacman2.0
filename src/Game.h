@@ -7,6 +7,8 @@
 #include "MazeGraph.h"
 #include "TextureManager.h"
 
+
+
 class Game
 {
     public:
@@ -18,6 +20,9 @@ class Game
         void Update();
         void EventListener();
         bool IsRunning();
+
+        /**Game Logic**/
+        void HandleCollision();
 
         static SDL_Renderer * renderer;
 

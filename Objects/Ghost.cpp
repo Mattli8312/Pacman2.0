@@ -6,7 +6,7 @@ Ghost::Ghost(){
     target_i = target_j = 0;
     scatter_i = scatter_j = 0;
     scatter_time = fright_time = 0;
-    w = h = dir = vel = 0;
+    w = h = dir = vel = 3;
     state_ = SCATTER;
     ghost = nullptr;
 }
@@ -67,41 +67,62 @@ void Ghost::HandleDirection(int x, int y, bool random)
         if(MazeGraph::graph[i][j] == '+'){
             int dist_;
             int min_dist = -1;
-            if(i - 1 > -1 && MazeGraph::graph[i-1][j] != '.' && prev_dir != 2){ //Checking direction up;
+            if(i - 1 > -1 && MazeGraph::graph[i-1][j] != '.' && prev_dir != 1){ //Checking direction up;
                 dist_ = (target_i - (i - 1)) * (target_i - (i - 1)) + (target_j - j) * (target_j - j);
-                directions.push_back(4);
-                if(min_dist == -1 || dist_ < min_dist){
-                    min_dist = dist_;
-                    dir = 4;
-                }
-            }
-            if(j - 1 > -1 && MazeGraph::graph[i][j-1] != '.' && prev_dir != 1){ //Checking direction left;
-                dist_ = (target_i - i) * (target_i - i) + (target_j - (j - 1)) * (target_j - (j - 1));
                 directions.push_back(3);
                 if(min_dist == -1 || dist_ < min_dist){
                     min_dist = dist_;
                     dir = 3;
                 }
             }
-            if(i + 1 < (int)MazeGraph::graph.size() && MazeGraph::graph[i+1][j] != '.' && prev_dir != 4){ //Check direction down
-                dist_ = (target_i - (i + 1)) * (target_i - (i + 1)) + (target_j - j) * (target_j - j);
+            if(j - 1 > -1 && MazeGraph::graph[i][j-1] != '.' && prev_dir != 0){ //Checking direction left;
+                dist_ = (target_i - i) * (target_i - i) + (target_j - (j - 1)) * (target_j - (j - 1));
                 directions.push_back(2);
                 if(min_dist == -1 || dist_ < min_dist){
                     min_dist = dist_;
                     dir = 2;
                 }
             }
-            if(j + 1 < (int)MazeGraph::graph.size() && MazeGraph::graph[i][j+1] != '.' && prev_dir != 3){ //Check direction right
-                dist_ = (target_i - i) * (target_i - i) + (target_j - (j + 1)) * (target_j - (j + 1));
+            if(i + 1 < (int)MazeGraph::graph.size() && MazeGraph::graph[i+1][j] != '.' && prev_dir != 3){ //Check direction down
+                dist_ = (target_i - (i + 1)) * (target_i - (i + 1)) + (target_j - j) * (target_j - j);
                 directions.push_back(1);
                 if(min_dist == -1 || dist_ < min_dist){
                     min_dist = dist_;
                     dir = 1;
                 }
             }
+            if(j + 1 < (int)MazeGraph::graph.size() && MazeGraph::graph[i][j+1] != '.' && prev_dir != 2){ //Check direction right
+                dist_ = (target_i - i) * (target_i - i) + (target_j - (j + 1)) * (target_j - (j + 1));
+                directions.push_back(0);
+                if(min_dist == -1 || dist_ < min_dist){
+                    min_dist = dist_;
+                    dir = 0;
+                }
+            }
             if(random){
                 dir = directions[rand() % directions.size()];
             }
+        }
+    }
+}
+
+void Ghost::Init(){
+    if(!(ypos % MazeGraph::cell_size) && !((xpos - MazeGraph::x_o) % MazeGraph::cell_size)){
+        int i_ = ypos / MazeGraph::cell_size;
+        int j_ = (xpos - MazeGraph::x_o) / MazeGraph::cell_size;
+        if(MazeGraph::graph[i_][j_] == '+'){
+            if(dir == 3 && init_time) init_time--;
+            if(init_time) dir = (dir + 2) % 4;
+            else if(j_ < 13) dir = 0;
+            else if(j_ > 13) dir = 2;
+            else dir = 3;
+        }
+        if(MazeGraph::graph[i_][j_] == '*'){
+            switch(scatter_j){
+                case 1: dir = 2;
+                default: dir = 0;
+            }
+            state_ = SCATTER;
         }
     }
 }
@@ -120,6 +141,7 @@ void Ghost::Frighten()
 {
     HandleDirection(-1, -1, true);
     if(!fright_time--){
+        std::cout<<name<<":"<<vel<<std::endl;
         state_ = CHASE;
         ghost = GhostSheet[0][0];
         fright_time = 600;
@@ -129,20 +151,32 @@ void Ghost::Frighten()
     }
 }
 
+void Ghost::Eaten()
+{
+    HandleDirection(MazeGraph::x_o + 11 * MazeGraph::cell_size, 11 * MazeGraph::cell_size);
+    int i_ = ypos / MazeGraph::cell_size;
+    int j_ = (xpos - MazeGraph::x_o) / MazeGraph::cell_size;
+    if(!((xpos-MazeGraph::x_o)%MazeGraph::cell_size) && !(ypos%MazeGraph::cell_size)){
+        if(i_ == 11 && j_ == 11){
+            std::cout<<"Chase"<<std::endl;
+            state_ = CHASE;
+        }
+    }
+}
 
 void Ghost::HandleMovement()
 {
     switch(dir){
-        case 1:
+        case 0:
             if((xpos >= (int)(MazeGraph::graph[0].size()-1) * (int)MazeGraph::cell_size + (int)MazeGraph::x_o)){
                 xpos = MazeGraph::x_o;
             }
             else
                 xpos += vel;
             break;
-        case 2:
+        case 1:
             ypos += vel; break;
-        case 3:
+        case 2:
             if(!(xpos - MazeGraph::x_o)){
                 xpos = MazeGraph::x_o + MazeGraph::cell_size * (MazeGraph::graph[0].size()-1);
             }
@@ -163,6 +197,21 @@ int Ghost::GetYPos(){
     return ypos;
 }
 
+bool Ghost::IsFrightened()
+{
+    return state_ == FRIGHT;
+}
+
+bool Ghost::IsEatened()
+{
+    return state_ == EATEN;
+}
+
+bool Ghost::IsChase()
+{
+    return state_ == CHASE;
+}
+
 void Ghost::SetStateFright()
 {
     /**Rotate the direction 180**/
@@ -173,6 +222,11 @@ void Ghost::SetStateFright()
     ghost = GhostSheet[1][0];
 }
 
+void Ghost::SetStateEat(){
+    state_ = EATEN;
+    ghost = GhostSheet[0][0];
+    fright_time = 600;
+}
 
 void Ghost::TargetSystem(std::vector<int> points)
 {

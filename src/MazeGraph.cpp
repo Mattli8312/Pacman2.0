@@ -10,6 +10,7 @@ unsigned MazeGraph::x_o;
 unsigned MazeGraph::cell_size;
 unsigned MazeGraph::width;
 unsigned MazeGraph::height;
+int MazeGraph::food_count;
 
 MazeGraph::MazeGraph()
 {
@@ -18,6 +19,7 @@ MazeGraph::MazeGraph()
     width = 0;
     height = 0;
     x_o = 0;
+    food_count = 0;
 }
 
 MazeGraph::~MazeGraph()
@@ -57,7 +59,10 @@ void MazeGraph::ParseGraphFromFile()
         for(unsigned j = 0; j < graph[0].size(); j++){ /**0 means empty, 1 means pellet, 2 means power pellet**/
             if(graph[i][j] == '.' || graph[i][j] == ',' || (i > 8 && i < 20 && j > 6 && j < 21)) temp.push_back(0);
             else if((!(i-23) || !(i-4))&&(!(j-1)||!(j-26))) temp.push_back(2);
-            else temp.push_back(1);
+            else {
+                food_count++;
+                temp.push_back(1);
+            }
         }
         pellets.push_back(temp);
     }
