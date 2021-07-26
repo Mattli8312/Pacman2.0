@@ -5,6 +5,8 @@
 #include "Inky.h"
 #include "Clyde.h"
 
+#include <SDL_ttf.h>
+
 Player * player;
 Blinky * blinky;
 Pinky * pinky;
@@ -63,29 +65,27 @@ void Game::Init()
 
 void Game::Update()
 {
-    if(player->HasCompleted()){
-        std::cout<<"Completed"<<std::endl;
-    }
+    std::vector<Ghost*> ghosts = {blinky};//, pinky, inky, clyde};
     if(player->IsEnergized()){
-        if(!blinky->IsFrightened() && !blinky->IsEatened()) blinky->SetStateFright();
-        if(!pinky->IsFrightened() && !pinky->IsEatened()) pinky->SetStateFright();
-        if(!inky->IsFrightened() && !inky->IsEatened()) inky->SetStateFright();
-        if(!clyde->IsFrightened() && !clyde->IsEatened()) clyde->SetStateFright();
+        for(auto g: ghosts){
+            if(g->IsChase() || g->IsScattered()){
+                g->SetStateFright();
+                g->HandleSpeedChange(2);
+            }
+        }
         player->SetEnergized(false);
     }
     else{
         blinky->TargetSystem({player->GetXPos(), player->GetYPos()});
-        pinky->TargetSystem({player->GetXPos(), player->GetYPos(), player->GetDir()});
-        inky->TargetSystem({player->GetXPos(), player->GetYPos(), blinky->GetXPos(), blinky->GetYPos()});
-        clyde->TargetSystem({player->GetXPos(), player->GetYPos()});
+        //pinky->TargetSystem({player->GetXPos(), player->GetYPos(), player->GetDir()});
+        //inky->TargetSystem({player->GetXPos(), player->GetYPos(), blinky->GetXPos(), blinky->GetYPos()});
+        //clyde->TargetSystem({player->GetXPos(), player->GetYPos()});
     }
     player->HandleEventListener();
     player->HandleMovement();
-    blinky->HandleMovement();
-    pinky->HandleMovement();
-    inky->HandleMovement();
-    clyde->HandleMovement();
-
+    for(auto g: ghosts){
+        g->HandleMovement();
+    }
 }
 
 void Game::Render()
@@ -98,15 +98,34 @@ void Game::Render()
     pinky->HandleDisplay();
     inky->HandleDisplay();
     clyde->HandleDisplay();
+    RenderText();
     /**Update frame**/
     SDL_RenderPresent(renderer);
 }
+
 void Game::Clear()
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
+
+void Game::RenderText(){
+        //this opens a font style and sets a size
+    if(TTF_Init() == -1){
+        std::cout<<"[TTF]: Init Failed"<<std::endl;
+    }
+    std::string msg("SCORE: " + std::to_string(player->GetScore()));
+    TTF_Font* Sans = TTF_OpenFont("src/arial/arial.ttf", 40);
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, &msg[0], {255,255,255});
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+    SDL_Rect Message_rect = {20,20,100,20};
+    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(Message);
+}
+
 void Game::EventListener()
 {
     SDL_Event event;
@@ -127,7 +146,6 @@ void Game::HandleCollision()
         if(std::abs(player->GetXPos() - g->GetXPos()) < (int)MazeGraph::cell_size/4){
             if(std::abs(player->GetYPos() - g->GetYPos()) < (int)MazeGraph::cell_size/4){
                 if(!g->IsFrightened() && !g->IsEatened()){
-                    //Pacman collided;
                     std::cout<<"Collided"<<std::endl;
                 }
                 else if(g->IsFrightened()){

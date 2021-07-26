@@ -19,6 +19,7 @@ class Game
         void Clear();
         void Update();
         void EventListener();
+        void RenderText();
         bool IsRunning();
 
         /**Game Logic**/

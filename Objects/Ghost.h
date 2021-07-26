@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include <vector>
 
-#define GhostVel 2
+#define GhostVel 3
 
 class Ghost
 {
@@ -19,6 +19,7 @@ class Ghost
         void HandleDisplay();
         void HandleDirection(int x, int y, bool random = false);
         void HandleMovement();
+        void HandleSpeedChange(int new_speed);
 
         void Init();
         void Scatter();
@@ -30,6 +31,8 @@ class Ghost
         bool IsFrightened();
         bool IsEatened();
         bool IsChase();
+        bool IsInit();
+        bool IsScattered();
 
         void SetStateFright();
         void SetStateEat();

@@ -22,6 +22,7 @@ class Player
         int GetXPos();
         int GetYPos();
         int GetDir();
+        int GetScore();
 
         void SetEnergized(bool);
 
@@ -38,7 +39,6 @@ class Player
         int dir;
         int a_rate; //Animation rate
         int a_indx; //Animation indx
-        int food_count;
 
         bool energized;
         bool completed;

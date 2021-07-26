@@ -64,7 +64,7 @@ void Ghost::HandleDirection(int x, int y, bool random)
     /**Random Selection**/
     std::vector<short> directions;
     if(!((xpos - MazeGraph::x_o)%MazeGraph::cell_size) && !(ypos%MazeGraph::cell_size)){
-        if(MazeGraph::graph[i][j] == '+'){
+        if(MazeGraph::graph[i][j] == '+' || (MazeGraph::graph[i][j] == '*' && state_ == EATEN)){
             int dist_;
             int min_dist = -1;
             if(i - 1 > -1 && MazeGraph::graph[i-1][j] != '.' && prev_dir != 1){ //Checking direction up;
@@ -104,6 +104,24 @@ void Ghost::HandleDirection(int x, int y, bool random)
             }
         }
     }
+}
+
+void Ghost::HandleSpeedChange(int new_speed){
+    switch(dir){
+        case 0:
+            if(xpos % new_speed) xpos += (xpos % new_speed);
+            break;
+        case 1:
+            if(ypos % new_speed) ypos += (ypos % new_speed);
+            break;
+        case 2:
+            if(xpos % new_speed) xpos -= (xpos % new_speed);
+            break;
+        default:
+            if(ypos % new_speed) ypos -= (ypos % new_speed);
+            break;
+    }
+    vel = new_speed;
 }
 
 void Ghost::Init(){
@@ -153,13 +171,13 @@ void Ghost::Frighten()
 
 void Ghost::Eaten()
 {
-    HandleDirection(MazeGraph::x_o + 11 * MazeGraph::cell_size, 11 * MazeGraph::cell_size);
+    HandleDirection(MazeGraph::x_o + 12 * MazeGraph::cell_size, 14 * MazeGraph::cell_size);
     int i_ = ypos / MazeGraph::cell_size;
     int j_ = (xpos - MazeGraph::x_o) / MazeGraph::cell_size;
     if(!((xpos-MazeGraph::x_o)%MazeGraph::cell_size) && !(ypos%MazeGraph::cell_size)){
-        if(i_ == 11 && j_ == 11){
+        if(i_ == 13 && j_ == 11){
             std::cout<<"Chase"<<std::endl;
-            state_ = CHASE;
+            state_ = INIT;
         }
     }
 }
@@ -175,7 +193,8 @@ void Ghost::HandleMovement()
                 xpos += vel;
             break;
         case 1:
-            ypos += vel; break;
+            ypos += vel;
+            break;
         case 2:
             if(!(xpos - MazeGraph::x_o)){
                 xpos = MazeGraph::x_o + MazeGraph::cell_size * (MazeGraph::graph[0].size()-1);
@@ -184,8 +203,8 @@ void Ghost::HandleMovement()
                 xpos -= vel;
             break;
         default:
-            ypos -= vel; break;
-
+            ypos -= vel;
+            break;
     }
 }
 
@@ -210,6 +229,14 @@ bool Ghost::IsEatened()
 bool Ghost::IsChase()
 {
     return state_ == CHASE;
+}
+
+bool Ghost::IsInit(){
+    return state_ == INIT;
+}
+
+bool Ghost::IsScattered(){
+    return state_ == SCATTER;
 }
 
 void Ghost::SetStateFright()
