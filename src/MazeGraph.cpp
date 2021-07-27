@@ -84,10 +84,20 @@ void MazeGraph::PrintGraph()
 }
 
 void MazeGraph::RenderCellWall(int i, int j){
-    if(graph[i][j] == '.')
-        SDL_SetRenderDrawColor(Game::renderer, 0, 128, 255, 255);
+
     unsigned delx = x_o + j * cell_size, dely = i * cell_size;
     SDL_Rect desrect;
+    if(graph[i][j] == '.')
+        SDL_SetRenderDrawColor(Game::renderer, 0, 128, 255, 255);
+    else if(graph[i][j] == 'p'){
+        //Render pink wall
+        SDL_SetRenderDrawColor(Game::renderer, 255, 192, 203, 255);
+        desrect = {(int)(delx), (int)(dely  + cell_size / 8 * 3), (int)(cell_size/2), (int)(cell_size/4)};
+        SDL_RenderFillRect(Game::renderer, &desrect);
+        desrect = {(int)(delx+cell_size/2), (int)(dely + cell_size/8 * 3), (int)(cell_size/2), (int)(cell_size/4)};
+        SDL_RenderFillRect(Game::renderer, &desrect);
+        return;
+    }
     if(i - 1 > -1 && graph[i-1][j] == '.'){
         //Draw a rect connecting that edge
         desrect = {(int)(delx + cell_size / 8 * 3), (int)(dely), (int)(cell_size/4), (int)(cell_size/2)};
@@ -146,4 +156,8 @@ void MazeGraph::ClearMaze()
     while(graph.size()){
         graph.pop_back();
     }
+    while(pellets.size()){
+        pellets.pop_back();
+    }
+    food_count = 0;
 }

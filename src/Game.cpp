@@ -24,11 +24,42 @@ Game::Game()
     inky = nullptr;
     clyde = nullptr;
     maze = nullptr;
+
+    state_ = GAME;
 }
 
 Game::~Game()
 {
     /**@todo**/
+    ResetPlayers();
+}
+void Game::Init()
+{
+    if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
+        window = SDL_CreateWindow("PacmanClone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, SDL_WINDOW_SHOWN);
+        renderer = SDL_CreateRenderer(window, -1, 0);
+    }
+    InitializePlayers();
+    /**Testing Pathfinding**/
+    //maze->PrintGraph();
+    running = true;
+}
+
+void Game::RunApplication(){
+    switch(state_){
+        case GAME:
+            EventListener();
+            HandleCollision();
+            Update();
+            Render();
+            break;
+        default:
+            maze->ParseGraphFromFile();
+            state_ = GAME;
+    }
+}
+
+void Game::ResetPlayers(){
     if(player) delete player;
     if(maze) delete maze;
     if(blinky) delete blinky;
@@ -43,12 +74,8 @@ Game::~Game()
     inky = nullptr;
     clyde = nullptr;
 }
-void Game::Init()
-{
-    if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
-        window = SDL_CreateWindow("PacmanClone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, SDL_WINDOW_SHOWN);
-        renderer = SDL_CreateRenderer(window, -1, 0);
-    }
+
+void Game::InitializePlayers(){
     maze = new MazeGraph;
     maze->ParseGraphFromFile();
     maze->RenderMaze();
@@ -61,9 +88,6 @@ void Game::Init()
     pinky->InitializeGhost();
     inky->InitializeGhost();
     clyde->InitializeGhost();
-    /**Testing Pathfinding**/
-    //maze->PrintGraph();
-    running = true;
 }
 
 void Game::Update()
@@ -89,6 +113,10 @@ void Game::Update()
     for(auto g: ghosts){
         g->HandleMovement();
     }
+    if(MazeGraph::food_count < 200){
+        std::cout<<"Lvl complete"<<std::endl;
+        state_ = FINISH;
+    }
 }
 
 void Game::Render()
@@ -97,9 +125,9 @@ void Game::Render()
     SDL_RenderClear(renderer);
     /**Clear Previous frame**/
     maze->RenderMaze();
+    for(auto g: ghosts) g->HandleDisplay();
     player->HandleDisplay();
     RenderText();
-    for(auto g: ghosts) g->HandleDisplay();
     /**Update frame**/
     SDL_RenderPresent(renderer);
 }
