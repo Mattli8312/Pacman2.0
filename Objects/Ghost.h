@@ -44,8 +44,8 @@ class Ghost
         std::vector<short> directions;
         GameObject* ghost;
 
-        int xpos;
-        int ypos;
+        int xpos, start_x;
+        int ypos, start_y;
         int w, h;
         int vel, dir;
         int sprt_i, sprt_j;
@@ -57,6 +57,7 @@ class Ghost
         int target_j;
         int scatter_i;
         int scatter_j;
+
 
         int scatter_time, fright_time, init_time;
         State state_;

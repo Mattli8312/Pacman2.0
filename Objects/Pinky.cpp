@@ -2,8 +2,8 @@
 
 Pinky::Pinky(int x, int y, int width, int height, std::string ghostname)
 {
-    xpos = x;
-    ypos = y;
+    xpos = start_x = x;
+    ypos = start_y = y;
     w = width;
     h = height;
     state_ = INIT;
