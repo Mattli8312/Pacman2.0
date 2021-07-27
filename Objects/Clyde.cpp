@@ -10,6 +10,7 @@ Clyde::Clyde(int x, int y, int width, int height, std::string ghostname)
     state_ = INIT;
     name = ghostname;
 
+    sprt_i = sprt_j = 0;
     scatter_i = 29; scatter_j = 26;
     scatter_time = fright_time = 600;
     dir = 3, vel = GhostVel;

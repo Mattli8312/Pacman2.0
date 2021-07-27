@@ -48,6 +48,8 @@ class Ghost
         int ypos;
         int w, h;
         int vel, dir;
+        int sprt_i, sprt_j;
+        int fps = 5;
         std::string name;
 
         /**Used for moving mechanism**/

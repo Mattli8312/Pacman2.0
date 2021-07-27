@@ -58,7 +58,10 @@ void MazeGraph::ParseGraphFromFile()
         std::vector<short> temp;
         for(unsigned j = 0; j < graph[0].size(); j++){ /**0 means empty, 1 means pellet, 2 means power pellet**/
             if(graph[i][j] == '.' || graph[i][j] == ',' || (i > 8 && i < 20 && j > 6 && j < 21)) temp.push_back(0);
-            else if((!(i-23) || !(i-4))&&(!(j-1)||!(j-26))) temp.push_back(2);
+            else if((!(i-23) || !(i-4))&&(!(j-1)||!(j-26))){
+                food_count++;
+                temp.push_back(2);
+            }
             else {
                 food_count++;
                 temp.push_back(1);
