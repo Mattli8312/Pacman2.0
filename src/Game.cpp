@@ -19,6 +19,10 @@ Game::Game()
 {
     window = nullptr;
     player = nullptr;
+    blinky = nullptr;
+    pinky = nullptr;
+    inky = nullptr;
+    clyde = nullptr;
     maze = nullptr;
 }
 

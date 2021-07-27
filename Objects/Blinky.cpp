@@ -26,7 +26,6 @@ Blinky::~Blinky()
             GhostSheet[i][j] = nullptr;
         }
     }
-    std::cout<<"Freed!"<<std::endl;
     ghost = nullptr;
 }
 

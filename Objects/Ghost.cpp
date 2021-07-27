@@ -11,7 +11,6 @@ Ghost::Ghost(){
     ghost = nullptr;
 }
 
-
 Ghost::Ghost(int x, int y, int width, int height, std::string name)
 {
     /**@nothing**/
@@ -28,7 +27,7 @@ void Ghost::InitializeGhost()
         std::vector<GameObject*> temp;
         for(int j = 0; j < 2; j++){
             const char * filename;
-            std::string file("Sprites/" + name + "/" + std::to_string(i*2+j) + ".png");
+            std::string file("Sprites/" + name + "/" + std::to_string(i*2 + j) + ".png");
             filename = &file[0];
             temp.push_back(new GameObject(filename, xpos, ypos, w, h));
         }
@@ -46,17 +45,27 @@ void Ghost::InitializeGhost()
 void Ghost::HandleDisplay()
 {
     if(ghost != nullptr){
-        ghost = GhostSheet[sprt_i][sprt_j];
         ghost->Update(xpos - MazeGraph::cell_size/4, ypos - MazeGraph::cell_size/4);
         ghost->Render();
     }
-    if(!fps--){
-        fps = 10;
-        sprt_j = (sprt_j + 1) % 2;
+    switch(state_){
+        case FRIGHT:
+            if(sprt_i != 4) sprt_i = 4;
+            if(fright_time <= 100 && !(fright_time%5)){
+                sprt_j = sprt_j ? 0 : 1;
+            }
+            break;
+        case EATEN:
+            if(sprt_j != 3) sprt_j = 3;
+            sprt_i = dir;
+            break;
+        default:
+            if(sprt_i != dir) sprt_i = dir;
+            if(!fps--){
+                fps = 10; sprt_j = (sprt_j + 1) % 2;
+            }
     }
-    if(state_ != FRIGHT){
-        if(sprt_i != dir) sprt_i = dir;
-    }
+    ghost = GhostSheet[sprt_i][sprt_j];
 }
 
 void Ghost::HandleDirection(int x, int y, bool random)
@@ -127,8 +136,6 @@ void Ghost::HandleSpeedChange(int new_speed){
             while(ypos % new_speed) ypos --;
             break;
     }
-    std::cout<<xpos<<std::endl;
-    std::cout<<new_speed<<std::endl;
     vel = new_speed;
 }
 
@@ -196,11 +203,8 @@ void Ghost::Frighten()
     if(!fright_time--){
         state_ = CHASE;
         HandleSpeedChange(3);
-        ghost = GhostSheet[0][0];
+        ghost = GhostSheet[sprt_i][sprt_j];
         fright_time = 600;
-    }
-    else if(fright_time <= 100 && !(fright_time%5)){
-        sprt_j = sprt_j ? 0 : 1;
     }
 }
 
@@ -209,7 +213,7 @@ void Ghost::Eaten()
     HandleDirection(MazeGraph::x_o + 12 * MazeGraph::cell_size, 14 * MazeGraph::cell_size);
     int i_ = ypos / MazeGraph::cell_size;
     int j_ = (xpos - MazeGraph::x_o) / MazeGraph::cell_size;
-    if(sprt_j != 2) sprt_j = 2;
+    if(ghost != GhostSheet[dir][2]) ghost = GhostSheet[dir][2];
     if(!((xpos-MazeGraph::x_o)%MazeGraph::cell_size) && !(ypos%MazeGraph::cell_size)){
         if(i_ == 13 && j_ == 11){
             std::cout<<"Chase"<<std::endl;
@@ -257,7 +261,9 @@ void Ghost::SetStateFright()
     if(state_ != FRIGHT)
         dir = (dir + 2) % 4;
     state_ = FRIGHT;
-    ghost = GhostSheet[1][0];
+    sprt_i = 4;
+    sprt_j = 0;
+    ghost = GhostSheet[sprt_i][sprt_j];
 }
 
 void Ghost::SetStateEat(){

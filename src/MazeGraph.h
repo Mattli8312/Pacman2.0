@@ -11,6 +11,7 @@ class MazeGraph
         void ParseGraphFromFile();
         void PrintGraph();
         void RenderMaze();
+        void RenderCellWall(int i, int j);
         void ClearMaze();
 
 

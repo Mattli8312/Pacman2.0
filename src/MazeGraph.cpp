@@ -83,6 +83,30 @@ void MazeGraph::PrintGraph()
     }
 }
 
+void MazeGraph::RenderCellWall(int i, int j){
+    if(graph[i][j] == '.')
+        SDL_SetRenderDrawColor(Game::renderer, 0, 128, 255, 255);
+    unsigned delx = x_o + j * cell_size, dely = i * cell_size;
+    SDL_Rect desrect;
+    if(i - 1 > -1 && graph[i-1][j] == '.'){
+        //Draw a rect connecting that edge
+        desrect = {(int)(delx + cell_size / 8 * 3), (int)(dely), (int)(cell_size/4), (int)(cell_size/2)};
+        SDL_RenderFillRect(Game::renderer, &desrect);
+    }
+    if(j - 1 > -1 && graph[i][j-1] == '.'){
+        desrect = {(int)(delx), (int)(dely  + cell_size / 8 * 3), (int)(cell_size/2), (int)(cell_size/4)};
+        SDL_RenderFillRect(Game::renderer, &desrect);
+    }
+    if(i + 1 < (int)graph.size() && graph[i+1][j] == '.'){
+        desrect = {(int)(delx + cell_size / 8 * 3), (int)(dely + cell_size/2), (int)(cell_size/4), (int)(cell_size/2)};
+        SDL_RenderFillRect(Game::renderer, &desrect);
+    }
+    if(j + 1 < (int)graph[0].size() && graph[i][j+1] == '.'){
+        desrect = {(int)(delx+cell_size/2), (int)(dely + cell_size/8 * 3), (int)(cell_size/2), (int)(cell_size/4)};
+        SDL_RenderFillRect(Game::renderer, &desrect);
+    }
+}
+
 void MazeGraph::RenderMaze()
 {
     cell_size = 24;
@@ -91,14 +115,9 @@ void MazeGraph::RenderMaze()
     for(unsigned i = 0; i < graph.size(); i++){
         for(unsigned j = 0; j < graph[0].size(); j++){
                 /**First render the tile map**/
-                if(graph[i][j] == '.')
-                    SDL_SetRenderDrawColor(Game::renderer, 0, 128, 255, 255);
-                if(graph[i][j] == '*')
-                    SDL_SetRenderDrawColor(Game::renderer, 255, 192, 203, 255);
-                unsigned delx = x_o + j * cell_size, dely = i * cell_size;
-                desrect = {(int)(delx + cell_size / 4), (int)(dely + cell_size/4), (int)(cell_size/2), (int)(cell_size/2)};
-                SDL_RenderFillRect(Game::renderer, &desrect);
+                RenderCellWall(i, j);
                 /**Then render the food**/
+                unsigned delx = x_o + j * cell_size, dely = i * cell_size;
                 bool is_food = true;
                 switch(pellets[i][j]){
                     case 1:
