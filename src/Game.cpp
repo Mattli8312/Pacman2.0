@@ -94,8 +94,8 @@ void Game::Render()
     /**Clear Previous frame**/
     maze->RenderMaze();
     player->HandleDisplay();
-    for(auto g: ghosts) g->HandleDisplay();
     RenderText();
+    for(auto g: ghosts) g->HandleDisplay();
     /**Update frame**/
     SDL_RenderPresent(renderer);
 }

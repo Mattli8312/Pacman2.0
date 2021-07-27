@@ -7,8 +7,6 @@
 #include "MazeGraph.h"
 #include "TextureManager.h"
 
-
-
 class Game
 {
     public:
