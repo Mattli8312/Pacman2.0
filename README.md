@@ -1,4 +1,4 @@
-# Pacman Clone
+# Pacman Clone [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Mattli8312/Pacman2.0/blob/master/LICENSE)
 
 # Introduction
 
@@ -17,5 +17,17 @@
 - @Todo
 
 # TroubleShooting
+
+- @Todo
+
+# License
+
+- @Todo
+
+# Presentation
+
+- @Todo
+
+# Open Source
 
 - @Todo
