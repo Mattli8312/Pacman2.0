@@ -6,13 +6,10 @@
 
 # Documentation
 
-### File Structure:
-    - [main.cpp](https://github.com/Mattli8312/Pacman2.0/blob/master/LICENSE)
-        - Game.h
-            - Player
-            - Ghosts
-            - MazeGraph
-            - GameObject
+- Game.h
+- Player
+- Ghosts
+- MazeGraph
 
 # Installation/Running
 
