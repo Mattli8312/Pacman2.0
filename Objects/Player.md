@@ -8,7 +8,7 @@
 
 HandleDisplay: 
 
-    - Handles the rendering of the pacman ghost onto the window screen.
+    - Handles the rendering of the pacman onto the window screen.
 
     - Handles which spritesheet object, stored in a 2-D vector of GameObjects, to render specified by the direction and the fps.
 
@@ -22,11 +22,13 @@ HandleMovement:
 
     - Calls HasCollided method
 
-HandleReset: [param] : *short storing player dir*
+HandleReset: 
 
     -Used by Game Object when resetting the player object to it's original location
 
-    [return]: *boolean indicating whether player collided or not*
+HasCollided: [param] : *short storing player dir*
+
+    -[return]: *boolean indicating whether player collided or not*
 
 ## Getters
 
@@ -34,19 +36,19 @@ IsEnergized:
 
     - [return]: *boolean indicating whether player ate energizer*
 
--GetXPos:
+GetXPos:
 
     - [return]: *int storing player's x position*
 
--GetYPos:
+GetYPos:
 
     - [return]: *int storing player's y position*
 
--GetDir:
+GetDir:
 
     - [return]: *int storing player's direction*
 
--GetScore:
+GetScore:
 
     - [return]: *int storing player's score*
 
