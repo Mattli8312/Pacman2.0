@@ -6,10 +6,10 @@
 
 # Documentation
 
-- [Game.h]()
+- [Game]()
 - [Player](https://github.com/Mattli8312/Pacman2.0/blob/master/Objects/Player.md)
-- Ghosts
-- MazeGraph
+- [Ghosts](https://github.com/Mattli8312/Pacman2.0/blob/master/Objects/Ghost.md)
+- [MazeGraph]
 
 # Installation/Running
 
