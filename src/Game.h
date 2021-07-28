@@ -33,6 +33,7 @@ class Game
 
     private:
         int fps = 0;
+        int ghost_points = 100;
         GameState state_;
         //Game states/Parameters
         bool running;

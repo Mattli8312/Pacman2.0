@@ -200,3 +200,7 @@ void Player::SetAIndx(int val){
     a_indx = val;
     player = Pacman[dir][a_indx];
 }
+
+void Player::AddScore(int val){
+    score += val;
+}

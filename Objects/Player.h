@@ -26,6 +26,7 @@ class Player
 
         void SetEnergized(bool);
         void SetAIndx(int val);
+        void AddScore(int val);
 
     private:
         std::vector<std::vector<GameObject*>> Pacman;

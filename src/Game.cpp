@@ -140,7 +140,7 @@ void Game::Update()
     if(player->IsEnergized()){
         Ghost::fright_time = 599; /**Begin the offset**/
         for(auto g: ghosts){
-            if(!g->IsEatened()){
+            if(g->IsScattered() || g->IsChase()){
                 g->SetStateFright();
                 g->HandleSpeedChange(2);
             }
