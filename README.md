@@ -10,7 +10,28 @@
 
 # Installation/Running
 
-- @Todo
+First you will want to install SDL2.0, used for running the game window, SDLImage, for rendering sprites, and SDlttf, for rendering text
+    - *Note: Make sure you download and install the 32-bit version, the 64-bit version will not run*
+
+Next, clone this repository into any directory/folder you would like: preferably your C-drive.
+
+```
+$ cd /FolderName
+$ git clone https://github.com/Mattli8312/Pacman2.0.git
+```
+
+If you want to build and run this program, you can use an IDE such as VS or CodeBlocks. You will need to set up the targets for the compiler and
+the linker if you choose to do so. 
+
+If you do so, it may be easier to create a Dev directory in your local folder to store the SDL dependencies in and then simply add the necessary linkers and compilers for your IDE. 
+
+``` 
+$ cd /LocalCDrive(Username)
+$ mkdir DevFolder
+$ cp -R SDL2 DevFolder
+$ cp -R SDL2_Img DevFolder
+$ cp -R SDL2_ttf DevFolder
+```
 
 # Potential Bugs
 
