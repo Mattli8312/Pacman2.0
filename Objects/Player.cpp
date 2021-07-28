@@ -37,9 +37,9 @@ Player::Player(int x, int y, int w, int h)
     width = w;
     height = h;
     a_rate = 5;
-    a_indx = 0;
+    a_indx = 2;
     dir = 0;
-    energized = completed = false;
+    energized = false;
     player = Pacman[dir][a_indx];
 }
 
@@ -161,6 +161,13 @@ bool Player::HasCollided(short direction)
     }
 }
 
+void Player::HandleReset(){
+    x_pos = MazeGraph::x_o + MazeGraph::cell_size * 13;
+    y_pos = MazeGraph::cell_size * 23;
+    dir = 0; energized = false;
+    a_indx = 2;
+}
+
 int Player::GetXPos()
 {
     return x_pos;
@@ -184,11 +191,12 @@ bool Player::IsEnergized()
     return energized;
 }
 
-bool Player::HasCompleted(){
-    return completed;
-}
-
 void Player::SetEnergized(bool value)
 {
     energized = value;
+}
+
+void Player::SetAIndx(int val){
+    a_indx = val;
+    player = Pacman[dir][a_indx];
 }

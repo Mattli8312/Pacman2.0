@@ -15,9 +15,9 @@ class Player
         void HandleDisplay();
         void HandleEventListener();
         void HandleMovement();
+        void HandleReset();
 
         bool HasCollided(short direction);
-        bool HasCompleted();
         bool IsEnergized();
         int GetXPos();
         int GetYPos();
@@ -25,6 +25,7 @@ class Player
         int GetScore();
 
         void SetEnergized(bool);
+        void SetAIndx(int val);
 
     private:
         std::vector<std::vector<GameObject*>> Pacman;
@@ -41,7 +42,6 @@ class Player
         int a_indx; //Animation indx
 
         bool energized;
-        bool completed;
 };
 
 #endif // PLAYER_H

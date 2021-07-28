@@ -20,6 +20,7 @@ class Ghost
         void HandleDirection(int x, int y, bool random = false);
         void HandleMovement();
         void HandleSpeedChange(int new_speed);
+        void HandleReset();
 
         void Init();
         void Scatter();
@@ -47,7 +48,7 @@ class Ghost
         int xpos, start_x;
         int ypos, start_y;
         int w, h;
-        int vel, dir;
+        int vel, dir, prev_dir;
         int sprt_i, sprt_j;
         int fps = 5;
         std::string name;
@@ -59,7 +60,7 @@ class Ghost
         int scatter_j;
 
 
-        int scatter_time, fright_time, init_time;
+        int scatter_time, fright_time, init_time, prev_init_time;
         State state_;
 };
 

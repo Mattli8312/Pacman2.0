@@ -23,6 +23,11 @@ Ghost::~Ghost()
 
 void Ghost::InitializeGhost()
 {
+    /**Used for resetting the ghost**/
+    start_x = xpos;
+    start_y = ypos;
+    prev_dir = dir;
+    prev_init_time = init_time;
     for(int i = 0; i < 4; i++){
         std::vector<GameObject*> temp;
         for(int j = 0; j < 2; j++){
@@ -163,6 +168,14 @@ void Ghost::HandleMovement()
             ypos -= vel;
             break;
     }
+}
+
+void Ghost::HandleReset(){
+    xpos = start_x;
+    ypos = start_y;
+    dir = prev_dir;
+    init_time = prev_init_time;
+    state_ = name == "Blinky" ? SCATTER : INIT;
 }
 
 void Ghost::Init(){
