@@ -109,11 +109,11 @@ void Game::InitializePlayers(){
     maze = new MazeGraph;
     maze->ParseGraphFromFile();
     maze->RenderMaze(false);
-    player = new Player(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 23, MazeGraph::cell_size * 3 / 2, MazeGraph::cell_size * 3 / 2);
-    blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 11, 32, 32, "Blinky");
-    pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 13, 32, 32, "Pinky");
-    inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 13, 32, 32, "Inky");
-    clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 15, MazeGraph::cell_size * 13, 32, 32, "Clyde");
+    player = new Player(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::y_o + MazeGraph::cell_size * 23, MazeGraph::cell_size * 3 / 2, MazeGraph::cell_size * 3 / 2);
+    blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::y_o + MazeGraph::cell_size * 11, 32, 32, "Blinky");
+    pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::y_o + MazeGraph::cell_size * 13, 32, 32, "Pinky");
+    inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::y_o + MazeGraph::cell_size * 13, 32, 32, "Inky");
+    clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 15, MazeGraph::y_o + MazeGraph::cell_size * 13, 32, 32, "Clyde");
     blinky->InitializeGhost();
     pinky->InitializeGhost();
     inky->InitializeGhost();
@@ -122,10 +122,25 @@ void Game::InitializePlayers(){
 
 void Game::Update()
 {
+    /**Handle the fright time**/
     std::vector<Ghost*> ghosts= {blinky, pinky, inky, clyde};
+    /**Handle Fright time**/
+    if(Ghost::fright_time < 600){
+        Ghost::fright_time--;
+    }
+    if(Ghost::fright_time <= 0){
+        for(auto g: ghosts) {
+            if(!g->IsEatened()){
+                g->SetStateChase();
+            }
+        }
+        Ghost::fright_time = 600;
+    }
+    /**Handle entity movements**/
     if(player->IsEnergized()){
+        Ghost::fright_time = 599; /**Begin the offset**/
         for(auto g: ghosts){
-            if(g->IsChase() || g->IsScattered()){
+            if(!g->IsEatened()){
                 g->SetStateFright();
                 g->HandleSpeedChange(2);
             }
@@ -143,6 +158,7 @@ void Game::Update()
     for(auto g: ghosts){
         g->HandleMovement();
     }
+    /**Handle completion of level**/
     if(MazeGraph::food_count < 1){
         std::cout<<"Lvl complete"<<std::endl;
         state_ = FINISH;
@@ -177,14 +193,22 @@ void Game::RenderText(){
         std::cout<<"[TTF]: Init Failed"<<std::endl;
     }
     std::string msg("1UP            " + std::to_string(player->GetScore()));
+    std::string hs_msg("HIGH SCORE     89260");
     TTF_Font* Sans = TTF_OpenFont("src/arial/arial.ttf", 60);
     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, &msg[0], {255,255,255});
+    SDL_Surface* surfaceMessage2 = TTF_RenderText_Solid(Sans, &hs_msg[0], {255,255,255});
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+    SDL_Texture* Message2 = SDL_CreateTextureFromSurface(renderer, surfaceMessage2);
 
-    SDL_Rect Message_rect = {(int)MazeGraph::x_o,20,200,20};
+    SDL_Rect Message_rect = {(int)MazeGraph::x_o,10,200,20};
     SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+    Message_rect.x = MazeGraph::x_o + MazeGraph::width - 200;
+    Message_rect.w = 300;
+    SDL_RenderCopy(renderer, Message2, NULL, &Message_rect);
     SDL_FreeSurface(surfaceMessage);
+    SDL_FreeSurface(surfaceMessage2);
     SDL_DestroyTexture(Message);
+    SDL_DestroyTexture(Message2);
 }
 
 void Game::EventListener()

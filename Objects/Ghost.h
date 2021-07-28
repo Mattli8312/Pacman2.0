@@ -37,8 +37,11 @@ class Ghost
 
         void SetStateFright();
         void SetStateEat();
+        void SetStateChase();
 
         virtual void TargetSystem(std::vector<int> points);
+
+        static int fright_time;
 
     protected:
         std::vector<std::vector<GameObject*>> GhostSheet;
@@ -60,7 +63,7 @@ class Ghost
         int scatter_j;
 
 
-        int scatter_time, fright_time, init_time, prev_init_time;
+        int scatter_time, init_time, prev_init_time;
         State state_;
 };
 

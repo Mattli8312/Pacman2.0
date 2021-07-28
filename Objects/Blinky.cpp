@@ -31,7 +31,6 @@ Blinky::~Blinky()
 
 
 void Blinky::TargetSystem(std::vector<int> points){
-
     switch(state_){
         case SCATTER:
             Scatter();

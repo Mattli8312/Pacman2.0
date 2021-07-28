@@ -85,7 +85,7 @@ void Player::HandleEventListener()
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     //This conditional statement is used for rendering purposes: To ensure that the pacman character's texture doesn't
     //Overlap with the barriers, this condition make's sure to turn only at certain points
-    if((x_pos - MazeGraph::x_o) % MazeGraph::cell_size == 0 && (y_pos) % MazeGraph::cell_size == 0){
+    if((x_pos - MazeGraph::x_o) % MazeGraph::cell_size == 0 && (y_pos - MazeGraph::y_o) % MazeGraph::cell_size == 0){
         if (state[SDL_SCANCODE_A]) {
             dir = 2;
             player = Pacman[dir][a_indx];
@@ -119,7 +119,7 @@ void Player::HandleEventListener()
 bool Player::HasCollided(short direction)
 {
     unsigned j_ = (x_pos) - MazeGraph::x_o + width/2;
-    unsigned i_ = y_pos + height/2;
+    unsigned i_ = (y_pos) - MazeGraph::y_o + height/2;
 
     j_ /= MazeGraph::cell_size;
     i_ /= MazeGraph::cell_size;
@@ -129,7 +129,7 @@ bool Player::HasCollided(short direction)
     maze as well
     **/
 
-    if(!((x_pos - MazeGraph::x_o) % MazeGraph::cell_size) && !(y_pos % MazeGraph::cell_size)){
+    if(!((x_pos - MazeGraph::x_o) % MazeGraph::cell_size) && !((y_pos - MazeGraph::y_o) % MazeGraph::cell_size)){
         //continue
         switch(MazeGraph::pellets[i_][j_]){
             case 1: score += 10; MazeGraph::food_count --; break;
@@ -151,11 +151,11 @@ bool Player::HasCollided(short direction)
                 return false;
             return true;
         case 1: //Down
-            if(y_pos % MazeGraph::cell_size || MazeGraph::graph[i_+1][j_] != '.')
+            if((y_pos - MazeGraph::y_o) % MazeGraph::cell_size || MazeGraph::graph[i_+1][j_] != '.')
                 return false;
             return true;
         default:
-            if(y_pos % MazeGraph::cell_size || MazeGraph::graph[i_-1][j_] != '.')
+            if((y_pos - MazeGraph::y_o) % MazeGraph::cell_size || MazeGraph::graph[i_-1][j_] != '.')
                 return false;
             return true;
     }
@@ -163,7 +163,7 @@ bool Player::HasCollided(short direction)
 
 void Player::HandleReset(){
     x_pos = MazeGraph::x_o + MazeGraph::cell_size * 13;
-    y_pos = MazeGraph::cell_size * 23;
+    y_pos = MazeGraph::y_o + MazeGraph::cell_size * 23;
     dir = 0; energized = false;
     a_indx = 2;
 }

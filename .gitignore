@@ -1,2 +1,5 @@
-/bin 
-/obj
+/bin/Debug
+/bin/include
+/bin/lib
+/obj/Debug
+/Text.txt

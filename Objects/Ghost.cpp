@@ -1,6 +1,8 @@
 #include "Ghost.h"
 #include "stdio.h"
 
+int Ghost::fright_time;
+
 Ghost::Ghost(){
     xpos = ypos = sprt_i = sprt_j = 0;
     target_i = target_j = 0;
@@ -76,14 +78,18 @@ void Ghost::HandleDisplay()
 void Ghost::HandleDirection(int x, int y, bool random)
 {
     /**Parameters**/
-    target_i = y / MazeGraph::cell_size;
+    SDL_Rect des = {x,y,20,20};
+    SDL_SetRenderDrawColor(Game::renderer, 255,255,255,255);
+    SDL_RenderDrawRect(Game::renderer, &des);
+    SDL_SetRenderDrawColor(Game::renderer, 0,0,0,255);
+    target_i = (y - MazeGraph::y_o) / MazeGraph::cell_size;
     target_j = (x - MazeGraph::x_o) / MazeGraph::cell_size;
     int j = (xpos - MazeGraph::x_o) / MazeGraph::cell_size;
-    int i = ypos / MazeGraph::cell_size;
+    int i = (ypos - MazeGraph::y_o) / MazeGraph::cell_size;
     int prev_dir = dir;
     /**Random Selection**/
     std::vector<short> directions;
-    if(!((xpos - MazeGraph::x_o)%MazeGraph::cell_size) && !(ypos%MazeGraph::cell_size)){
+    if(!((xpos - MazeGraph::x_o)%MazeGraph::cell_size) && !((ypos-MazeGraph::y_o)%MazeGraph::cell_size)){
         if(MazeGraph::graph[i][j] == '+' || (MazeGraph::graph[i][j] == '*' && state_ == EATEN)){
             int dist_;
             int min_dist = -1;
@@ -132,13 +138,13 @@ void Ghost::HandleSpeedChange(int new_speed){
             while((xpos - MazeGraph::x_o) % new_speed) xpos ++;
             break;
         case 1:
-            while(ypos % new_speed) ypos++;
+            while((ypos - MazeGraph::y_o) % new_speed) ypos++;
             break;
         case 2:
             while((xpos - MazeGraph::x_o) % new_speed) xpos --;
             break;
         default:
-            while(ypos % new_speed) ypos --;
+            while((ypos -MazeGraph::y_o) % new_speed) ypos --;
             break;
     }
     vel = new_speed;
@@ -173,14 +179,16 @@ void Ghost::HandleMovement()
 void Ghost::HandleReset(){
     xpos = start_x;
     ypos = start_y;
-    dir = prev_dir;
+    dir = sprt_i = prev_dir;
     init_time = prev_init_time;
+    HandleSpeedChange(GhostVel);
+    ghost = GhostSheet[sprt_i][sprt_j];
     state_ = name == "Blinky" ? SCATTER : INIT;
 }
 
 void Ghost::Init(){
-    if(!(ypos % MazeGraph::cell_size) && !((xpos - MazeGraph::x_o) % MazeGraph::cell_size)){
-        int i_ = ypos / MazeGraph::cell_size;
+    if(!((ypos-MazeGraph::y_o) % MazeGraph::cell_size) && !((xpos - MazeGraph::x_o) % MazeGraph::cell_size)){
+        int i_ = (ypos - MazeGraph::y_o) / MazeGraph::cell_size;
         int j_ = (xpos - MazeGraph::x_o) / MazeGraph::cell_size;
         if(MazeGraph::graph[i_][j_] == '+'){
             if(dir == 3 && init_time) init_time--;
@@ -201,9 +209,10 @@ void Ghost::Init(){
 
 void Ghost::Scatter()
 {
-    HandleDirection(scatter_j * MazeGraph::cell_size + MazeGraph::x_o, scatter_i * MazeGraph::cell_size);
+    HandleDirection(scatter_j * MazeGraph::cell_size + MazeGraph::x_o, scatter_i * MazeGraph::cell_size + MazeGraph::y_o);
     if(!scatter_time--){
         state_ = CHASE;
+        std::cout<<"["<<name<<"]: Chase"<<std::endl;
         ghost = GhostSheet[sprt_i][sprt_j];
         scatter_time = 600;
     }
@@ -213,21 +222,18 @@ void Ghost::Frighten()
 {
     HandleDirection(-1, -1, true);
     if(!sprt_i) sprt_i = 1;
-    if(!fright_time--){
-        state_ = CHASE;
-        HandleSpeedChange(3);
-        ghost = GhostSheet[sprt_i][sprt_j];
-        fright_time = 600;
+    if(!fright_time){
+        SetStateChase();
     }
 }
 
 void Ghost::Eaten()
 {
-    HandleDirection(MazeGraph::x_o + 12 * MazeGraph::cell_size, 14 * MazeGraph::cell_size);
-    int i_ = ypos / MazeGraph::cell_size;
+    HandleDirection(MazeGraph::x_o + 13 * MazeGraph::cell_size, 14 * MazeGraph::cell_size + MazeGraph::y_o);
+    int i_ = (ypos - MazeGraph::y_o) / MazeGraph::cell_size;
     int j_ = (xpos - MazeGraph::x_o) / MazeGraph::cell_size;
     if(ghost != GhostSheet[dir][2]) ghost = GhostSheet[dir][2];
-    if(!((xpos-MazeGraph::x_o)%MazeGraph::cell_size) && !(ypos%MazeGraph::cell_size)){
+    if(!((xpos-MazeGraph::x_o)%MazeGraph::cell_size) && !((ypos-MazeGraph::y_o)%MazeGraph::cell_size)){
         if(i_ == 13 && j_ == 11){
             std::cout<<"Chase"<<std::endl;
             state_ = INIT;
@@ -282,9 +288,13 @@ void Ghost::SetStateFright()
 void Ghost::SetStateEat(){
     state_ = EATEN;
     ghost = GhostSheet[0][0];
-    fright_time = 600;
 }
 
+void Ghost::SetStateChase(){
+    state_ = CHASE;
+    HandleSpeedChange(3);
+    ghost = GhostSheet[sprt_i][sprt_j];
+}
 void Ghost::TargetSystem(std::vector<int> points)
 {
     /**@Nothing**/
