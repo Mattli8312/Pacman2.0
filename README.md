@@ -6,8 +6,8 @@
 
 # Documentation
 
-- Game.h
-- Player
+- [Game.h]()
+- [Player](https://github.com/Mattli8312/Pacman2.0/blob/master/Objects/Player.md)
 - Ghosts
 - MazeGraph
 
