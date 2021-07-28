@@ -2,7 +2,7 @@
 
 ## Description:
 
-*Used for rendering the Ghosts on the screen and handeling the game logic for pacman*
+*Used for rendering the Ghosts on the screen and handeling the game logic for ghosts*
 
 ## Methods
 
