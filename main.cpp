@@ -10,10 +10,7 @@ int main(int argc, char *argv[])
     std::cout<<"frame delay:"<<frame_delay<<std::endl;
     game.Init();
     while(game.IsRunning()){
-        game.EventListener();
-        game.HandleCollision();
-        game.Update();
-        game.Render();
+        game.RunApplication();
         SDL_Delay(frame_delay);
     }
     std::cout<<"Clearing..."<<std::endl;
