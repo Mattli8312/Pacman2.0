@@ -9,7 +9,7 @@
 - [Game]()
 - [Player](https://github.com/Mattli8312/Pacman2.0/blob/master/Objects/Player.md)
 - [Ghosts](https://github.com/Mattli8312/Pacman2.0/blob/master/Objects/Ghost.md)
-- [MazeGraph]
+- [MazeGraph](https://github.com/Mattli8312/Pacman2.0/blob/master/src/MazeGraph.md)
 
 # Installation/Running
 
