@@ -6,7 +6,13 @@
 
 # Documentation
 
-- @Todo
+### File Structure:
+    - [main.cpp](https://github.com/Mattli8312/Pacman2.0/blob/master/LICENSE)
+        - Game.h
+            - Player
+            - Ghosts
+            - MazeGraph
+            - GameObject
 
 # Installation/Running
 
@@ -35,17 +41,13 @@ $ cp -R SDL2_ttf DevFolder
 
 # Potential Bugs
 
-- @Todo
+-Some bugs
 
 # TroubleShooting
 
 - @Todo
 
 # License
-
-- @Todo
-
-# Presentation
 
 - @Todo
 
