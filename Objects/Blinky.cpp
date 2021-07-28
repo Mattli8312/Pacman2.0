@@ -12,7 +12,7 @@ Blinky::Blinky(int x, int y, int width, int height, std::string ghostname)
     sprt_i = sprt_j = 0;
     target_i = target_j = 0;
     scatter_i = 1; scatter_j = 26;
-    scatter_time = fright_time = 600;
+    scatter_time = 600;
     dir = init_time = 0, vel = GhostVel;
 }
 

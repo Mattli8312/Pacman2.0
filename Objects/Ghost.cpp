@@ -242,6 +242,10 @@ void Ghost::Eaten()
     }
 }
 
+std::string Ghost::GetName(){
+    return name;
+}
+
 int Ghost::GetXPos(){
     return xpos;
 }

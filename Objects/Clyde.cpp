@@ -12,7 +12,8 @@ Clyde::Clyde(int x, int y, int width, int height, std::string ghostname)
 
     sprt_i = sprt_j = 0;
     scatter_i = 29; scatter_j = 26;
-    scatter_time = fright_time = 600;
+    scatter_time = 600;
+    fright_time = 400;
     dir = 3, vel = GhostVel;
     init_time = 7;
 }

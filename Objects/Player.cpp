@@ -165,7 +165,7 @@ void Player::HandleReset(){
     x_pos = MazeGraph::x_o + MazeGraph::cell_size * 13;
     y_pos = MazeGraph::y_o + MazeGraph::cell_size * 23;
     dir = 0; energized = false;
-    a_indx = 2;
+    SetAIndx(2);
 }
 
 int Player::GetXPos()

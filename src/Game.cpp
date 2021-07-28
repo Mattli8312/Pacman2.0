@@ -7,6 +7,7 @@
 
 #include <SDL_ttf.h>
 
+/**Entities**/
 Player * player;
 Blinky * blinky;
 Pinky * pinky;
@@ -125,7 +126,7 @@ void Game::Update()
     /**Handle the fright time**/
     std::vector<Ghost*> ghosts= {blinky, pinky, inky, clyde};
     /**Handle Fright time**/
-    if(Ghost::fright_time < 600){
+    if(Ghost::fright_time < 400){
         Ghost::fright_time--;
     }
     if(Ghost::fright_time <= 0){
@@ -134,11 +135,12 @@ void Game::Update()
                 g->SetStateChase();
             }
         }
-        Ghost::fright_time = 600;
+        Ghost::fright_time = 400;
     }
     /**Handle entity movements**/
     if(player->IsEnergized()){
-        Ghost::fright_time = 599; /**Begin the offset**/
+        Ghost::fright_time = 399; /**Begin the offset**/
+        ghost_points = 200;
         for(auto g: ghosts){
             if(g->IsScattered() || g->IsChase()){
                 g->SetStateFright();
@@ -166,16 +168,33 @@ void Game::Update()
     }
 }
 
-void Game::Render(bool complete)
+void Game::Render(bool complete, bool eaten, std::string ghostname)
 {
     std::vector<Ghost*> ghosts = {blinky, pinky, inky, clyde};
     SDL_RenderClear(renderer);
     /**Clear Previous frame**/
+    /**
+    *Render entities and Maze
+    **/
     maze->RenderMaze(complete);
-    if(!complete)
-        for(auto g: ghosts) g->HandleDisplay();
-    player->HandleDisplay();
-    RenderText();
+    if(!complete){
+        for(auto g: ghosts)
+            if(ghostname != g->GetName())
+                g->HandleDisplay();
+    }
+    if(!eaten)
+        player->HandleDisplay();
+    else{
+        std::string pts(std::to_string(ghost_points));
+        RenderText(&pts[0], player->GetXPos(), player->GetYPos(), 20, 20);
+    }
+    /**
+    *Render Text
+    **/
+    std::string msg("1UP            " + std::to_string(player->GetScore()));
+    std::string hs_msg("HIGH SCORE     89260");
+    RenderText(&msg[0],(int)MazeGraph::x_o,10,200,20);
+    RenderText(&hs_msg[0], 420, 10, 300, 20);
     /**Update frame**/
     SDL_RenderPresent(renderer);
 }
@@ -187,28 +206,19 @@ void Game::Clear()
     SDL_Quit();
 }
 
-void Game::RenderText(){
+void Game::RenderText(const char* txt, int x, int y, int w, int h){
         //this opens a font style and sets a size
     if(TTF_Init() == -1){
         std::cout<<"[TTF]: Init Failed"<<std::endl;
     }
-    std::string msg("1UP            " + std::to_string(player->GetScore()));
-    std::string hs_msg("HIGH SCORE     89260");
     TTF_Font* Sans = TTF_OpenFont("src/arial/arial.ttf", 60);
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, &msg[0], {255,255,255});
-    SDL_Surface* surfaceMessage2 = TTF_RenderText_Solid(Sans, &hs_msg[0], {255,255,255});
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, &txt[0], {255,255,255});
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-    SDL_Texture* Message2 = SDL_CreateTextureFromSurface(renderer, surfaceMessage2);
 
-    SDL_Rect Message_rect = {(int)MazeGraph::x_o,10,200,20};
+    SDL_Rect Message_rect = {x,y,w,h};
     SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-    Message_rect.x = MazeGraph::x_o + MazeGraph::width - 200;
-    Message_rect.w = 300;
-    SDL_RenderCopy(renderer, Message2, NULL, &Message_rect);
     SDL_FreeSurface(surfaceMessage);
-    SDL_FreeSurface(surfaceMessage2);
     SDL_DestroyTexture(Message);
-    SDL_DestroyTexture(Message2);
 }
 
 void Game::EventListener()
@@ -232,11 +242,17 @@ void Game::HandleCollision()
             if(std::abs(player->GetYPos() - g->GetYPos()) < (int)MazeGraph::cell_size/4){
                 if(!g->IsFrightened() && !g->IsEatened()){
                     /**@todo!**/
+                    Render(true);
+                    SDL_Delay(500);
+                    state_ = RESET;
                 }
                 else if(g->IsFrightened()){
+                    Render(false, true, g->GetName());
                     SDL_Delay(500);
+                    player->AddScore(ghost_points);
                     g->SetStateEat();
                     g->HandleSpeedChange(6);
+                    ghost_points *= 2;
                 }
             }
         }

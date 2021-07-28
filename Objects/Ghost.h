@@ -27,6 +27,7 @@ class Ghost
         void Frighten();
         void Eaten();
 
+        std::string GetName();
         int GetXPos();
         int GetYPos();
         bool IsFrightened();

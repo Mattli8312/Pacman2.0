@@ -15,11 +15,11 @@ class Game
         enum GameState{GAME, FINISH, DEATH, RESET, INIT, MAIN};
 
         void Init();
-        void Render(bool completed = false);
+        void Render(bool completed = false, bool eat = false, std::string ghostname = "");
         void Clear();
         void Update();
         void EventListener();
-        void RenderText();
+        void RenderText(const char* txt, int x, int y, int w, int h);
         void RunApplication();
 
         void ResetPlayers();
@@ -33,7 +33,7 @@ class Game
 
     private:
         int fps = 0;
-        int ghost_points = 100;
+        int ghost_points = 200;
         GameState state_;
         //Game states/Parameters
         bool running;
