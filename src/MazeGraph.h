@@ -10,8 +10,8 @@ class MazeGraph
 
         void ParseGraphFromFile();
         void PrintGraph();
-        void RenderMaze();
-        void RenderCellWall(int i, int j);
+        void RenderMaze(bool);
+        void RenderCellWall(int i, int j, bool);
         void ClearMaze();
 
 
@@ -23,6 +23,7 @@ class MazeGraph
         static int food_count;
 
     private:
+        int maze_complete_fps = 0;
 };
 
 #endif // MAZEGRAPH_H

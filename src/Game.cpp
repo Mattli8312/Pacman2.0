@@ -25,7 +25,7 @@ Game::Game()
     clyde = nullptr;
     maze = nullptr;
 
-    state_ = GAME;
+    state_ = INIT;
 }
 
 Game::~Game()
@@ -48,14 +48,44 @@ void Game::Init()
 void Game::RunApplication(){
     switch(state_){
         case GAME:
-            EventListener();
-            HandleCollision();
-            Update();
-            Render();
-            break;
-        default:
-            maze->ParseGraphFromFile();
-            state_ = GAME;
+            {
+                EventListener();
+                HandleCollision();
+                Update();
+                Render();
+                break;
+            }
+        case FINISH:
+            {
+                if(fps > 100){
+                    state_ = RESET;
+                    fps = 0;
+                }
+                else{
+                    Render(true);
+                    fps++;
+                }
+                break;
+            }
+        case RESET:
+            {
+                std::vector<Ghost*> ghosts = {blinky, inky, clyde, pinky};
+                maze->ParseGraphFromFile();
+                player->HandleReset();
+                for(auto g: ghosts)
+                {
+                    g->HandleReset();
+                }
+                state_ = INIT;
+                break;
+            }
+        case INIT:{
+                Render();
+                SDL_Delay(3000);
+                state_ = GAME;
+                break;
+            }
+        default: break;
     }
 }
 
@@ -78,9 +108,9 @@ void Game::ResetPlayers(){
 void Game::InitializePlayers(){
     maze = new MazeGraph;
     maze->ParseGraphFromFile();
-    maze->RenderMaze();
-    player = new Player(MazeGraph::x_o + MazeGraph::cell_size * 12, MazeGraph::cell_size * 23, MazeGraph::cell_size * 3 / 2, MazeGraph::cell_size * 3 / 2);
-    blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 11, 32, 32, "Blinky");
+    maze->RenderMaze(false);
+    player = new Player(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 23, MazeGraph::cell_size * 3 / 2, MazeGraph::cell_size * 3 / 2);
+    blinky = new Blinky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 11, 32, 32, "Blinky");
     pinky = new Pinky(MazeGraph::x_o + MazeGraph::cell_size * 13, MazeGraph::cell_size * 13, 32, 32, "Pinky");
     inky = new Inky(MazeGraph::x_o + MazeGraph::cell_size * 11, MazeGraph::cell_size * 13, 32, 32, "Inky");
     clyde = new Clyde(MazeGraph::x_o + MazeGraph::cell_size * 15, MazeGraph::cell_size * 13, 32, 32, "Clyde");
@@ -113,19 +143,21 @@ void Game::Update()
     for(auto g: ghosts){
         g->HandleMovement();
     }
-    if(MazeGraph::food_count < 200){
+    if(MazeGraph::food_count < 1){
         std::cout<<"Lvl complete"<<std::endl;
         state_ = FINISH;
+        player->SetAIndx(2);
     }
 }
 
-void Game::Render()
+void Game::Render(bool complete)
 {
     std::vector<Ghost*> ghosts = {blinky, pinky, inky, clyde};
     SDL_RenderClear(renderer);
     /**Clear Previous frame**/
-    maze->RenderMaze();
-    for(auto g: ghosts) g->HandleDisplay();
+    maze->RenderMaze(complete);
+    if(!complete)
+        for(auto g: ghosts) g->HandleDisplay();
     player->HandleDisplay();
     RenderText();
     /**Update frame**/
@@ -144,12 +176,12 @@ void Game::RenderText(){
     if(TTF_Init() == -1){
         std::cout<<"[TTF]: Init Failed"<<std::endl;
     }
-    std::string msg("SCORE: " + std::to_string(player->GetScore()));
-    TTF_Font* Sans = TTF_OpenFont("src/arial/arial.ttf", 40);
+    std::string msg("1UP            " + std::to_string(player->GetScore()));
+    TTF_Font* Sans = TTF_OpenFont("src/arial/arial.ttf", 60);
     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, &msg[0], {255,255,255});
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
-    SDL_Rect Message_rect = {20,20,100,20};
+    SDL_Rect Message_rect = {(int)MazeGraph::x_o,20,200,20};
     SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
     SDL_FreeSurface(surfaceMessage);
     SDL_DestroyTexture(Message);

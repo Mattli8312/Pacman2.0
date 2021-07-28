@@ -12,10 +12,10 @@ class Game
     public:
         Game();
         ~Game();
-        enum GameState{GAME, FINISH, DEATH, MAIN};
+        enum GameState{GAME, FINISH, DEATH, RESET, INIT, MAIN};
 
         void Init();
-        void Render();
+        void Render(bool completed = false);
         void Clear();
         void Update();
         void EventListener();
@@ -32,6 +32,7 @@ class Game
         static SDL_Renderer * renderer;
 
     private:
+        int fps = 0;
         GameState state_;
         //Game states/Parameters
         bool running;

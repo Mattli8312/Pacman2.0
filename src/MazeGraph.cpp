@@ -83,12 +83,25 @@ void MazeGraph::PrintGraph()
     }
 }
 
-void MazeGraph::RenderCellWall(int i, int j){
+void MazeGraph::RenderCellWall(int i, int j, bool complete){
 
     unsigned delx = x_o + j * cell_size, dely = i * cell_size;
     SDL_Rect desrect;
-    if(graph[i][j] == '.')
-        SDL_SetRenderDrawColor(Game::renderer, 0, 128, 255, 255);
+    if(graph[i][j] == '.'){
+        if(complete){
+           if(maze_complete_fps > 5){
+                SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, 255);
+           }
+           else{
+                SDL_SetRenderDrawColor(Game::renderer, 0, 128, 255, 255);
+           }
+           if(maze_complete_fps > 10) maze_complete_fps = 0;
+        }
+        else{
+            SDL_SetRenderDrawColor(Game::renderer, 0, 128, 255, 255);
+            maze_complete_fps = 0;
+        }
+    }
     else if(graph[i][j] == 'p'){
         //Render pink wall
         SDL_SetRenderDrawColor(Game::renderer, 255, 192, 203, 255);
@@ -117,15 +130,16 @@ void MazeGraph::RenderCellWall(int i, int j){
     }
 }
 
-void MazeGraph::RenderMaze()
+void MazeGraph::RenderMaze(bool complete)
 {
     cell_size = 24;
     x_o = 400 - graph[0].size()*cell_size/2;
     SDL_Rect desrect;
+    maze_complete_fps = complete ? maze_complete_fps + 1 : 0;
     for(unsigned i = 0; i < graph.size(); i++){
         for(unsigned j = 0; j < graph[0].size(); j++){
                 /**First render the tile map**/
-                RenderCellWall(i, j);
+                RenderCellWall(i, j, complete);
                 /**Then render the food**/
                 unsigned delx = x_o + j * cell_size, dely = i * cell_size;
                 bool is_food = true;
